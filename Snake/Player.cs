@@ -33,7 +33,6 @@ public class Player(int x, int y)
                 {
                     Die();
                 }
-
                 int[] store = [part.x, part.y];
                 part.x = last[0];
                 part.y = last[1];
@@ -51,8 +50,7 @@ public class Player(int x, int y)
     {
         var keyInfo = Console.ReadKey(intercept: true); // intercept: true prevents the key from being written to the console
 
-        // Get the key that was pressed
-        ConsoleKey key = keyInfo.Key;
+        ConsoleKey key = keyInfo.Key;// Get the key that was pressed
 
         // Handle specific key presses
         if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)

@@ -1,14 +1,13 @@
 ﻿using Snake;
 
 ConsoleColor[,] map = new ConsoleColor[60, 20];
-//int[] snake = [1, 1];
 
 Player player = new Player(1, 1);
 Apple apple = new Apple();
 apple.NewApple(player);
 StartUp(map);
 //map[snake[0], snake[1]] = 1;
-for(int i = 0; i<0;i++)player.Grow();
+for(int i = 0; i<2;i++)player.Grow();
 
 while (true)
 {
@@ -33,9 +32,6 @@ while (true)
     Thread.Sleep(200);
 }
 
-
-
-
 void StartUp(ConsoleColor[,] array)
 {
     // Initialize all values in the map to 0
@@ -50,8 +46,6 @@ void StartUp(ConsoleColor[,] array)
 
 void DisplayMap(ConsoleColor[,] map)
 {
-
-
     for (int y = 0; y < map.GetLength(1); y++)
     {
         for (int x = 0; x < map.GetLength(0); x++)

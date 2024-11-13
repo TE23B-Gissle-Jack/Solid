@@ -14,7 +14,6 @@ public class Apple
     }
     public void NewApple(Player player)
     {
-        //60, 20
         int i = 0;
         while(player.segments.Any(segment => segment.x == x && segment.y == y)|| i == 0)
         {
