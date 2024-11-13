@@ -1,6 +1,6 @@
 ﻿using Snake;
 
-int[,] map = new int[60, 20];
+ConsoleColor[,] map = new ConsoleColor[60, 20];
 //int[] snake = [1, 1];
 
 Player player = new Player(1, 1);
@@ -15,14 +15,14 @@ while (true)
     Console.Clear();
     StartUp(map);
 
-    map[apple.x,apple.y] = 2;
+    map[apple.x,apple.y] = ConsoleColor.DarkRed;
 
-    map[player.head.x, player.head.y] = 1;
+    map[player.head.x, player.head.y] = ConsoleColor.Green;
     if (player.segments.Count > 0)
     {
         foreach (Player.Segment segment in player.segments)
         {
-            map[segment.x, segment.y] = 1;
+            map[segment.x, segment.y] = ConsoleColor.Green;
         }
     }
     DisplayMap(map);
@@ -36,19 +36,19 @@ while (true)
 
 
 
-void StartUp(int[,] array)
+void StartUp(ConsoleColor[,] array)
 {
     // Initialize all values in the map to 0
     for (int y = 0; y < array.GetLength(1); y++)
     {
         for (int x = 0; x < array.GetLength(0); x++)
         {
-            array[x, y] = 0;
+            array[x, y] = ConsoleColor.Black;
         }
     }
 }
 
-void DisplayMap(int[,] map)
+void DisplayMap(ConsoleColor[,] map)
 {
 
 
@@ -56,28 +56,10 @@ void DisplayMap(int[,] map)
     {
         for (int x = 0; x < map.GetLength(0); x++)
         {
-            int pixel = map[x, y];
-
-
-            if (pixel == 0)
-            {
-                Console.BackgroundColor = ConsoleColor.Black;
-                //Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write("  "); // No pixel
-            }
-            else if(pixel == 1)
-            {
-                //Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.Write("  "); //pixel
-            }
-            else
-            {
-                Console.BackgroundColor = ConsoleColor.DarkRed;
-                Console.Write("  "); //pixel
-            }
+            Console.BackgroundColor = map[x,y];
+            Console.Write("  "); // No pixel
         }
-        Console.BackgroundColor = ConsoleColor.Black; // no yellow/cyan console
         Console.WriteLine(); // Move to the next row
     }
+    Console.BackgroundColor = ConsoleColor.Black; // make rest of bgc black
 }

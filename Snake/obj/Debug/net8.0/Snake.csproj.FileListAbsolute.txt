@@ -12,3 +12,4 @@ C:\Users\jack.gissle\Desktop\Prog !\Solid\Snake\obj\Debug\net8.0\refint\Snake.dl
 C:\Users\jack.gissle\Desktop\Prog !\Solid\Snake\obj\Debug\net8.0\Snake.pdb
 C:\Users\jack.gissle\Desktop\Prog !\Solid\Snake\obj\Debug\net8.0\Snake.genruntimeconfig.cache
 C:\Users\jack.gissle\Desktop\Prog !\Solid\Snake\obj\Debug\net8.0\ref\Snake.dll
+C:\Users\jack.gissle\Desktop\Prog !\Solid\Snake\obj\Debug\net8.0\Snake.sourcelink.json
