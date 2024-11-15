@@ -41,41 +41,50 @@ public class Player(int x, int y)
         }
     }
 
-    void Die()
+    //Not Really
+    public void Draw(ConsoleColor[,] map)
+    {
+        //Assigne Colors at player positoion
+        map[this.head.x, this.head.y] = ConsoleColor.Green;
+        if (this.segments.Count > 0)
+    {
+        foreach (Player.Segment segment in this.segments)
+        {
+            map[segment.x, segment.y] = ConsoleColor.Green;
+        }
+    }
+    }
+
+    void Die()//Die
     {
         Environment.Exit(0);
     }
 
     int[] Inputs()
-    {
-        var keyInfo = Console.ReadKey(intercept: true); // intercept: true prevents the key from being written to the console
+    {   
+        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true); // Get key pressed and prevent it from being writen
 
         ConsoleKey key = keyInfo.Key;// Get the key that was pressed
 
         // Handle specific key presses
         if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
         {
-            Console.WriteLine("Up arrow key pressed.");
-            return [0, -1];
+            return [0, -1]; //direction player is going. So going -1 in Y here / going up
         }
         else if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
         {
-            Console.WriteLine("Down arrow key pressed.");
             return [0, 1];
         }
         else if (key == ConsoleKey.LeftArrow || key == ConsoleKey.A)
         {
-            Console.WriteLine("Left arrow key pressed.");
             return [-1, 0];
         }
         else if (key == ConsoleKey.RightArrow || key == ConsoleKey.D)
         {
-            Console.WriteLine("Right arrow key pressed.");
             return [1, 0];
         }
         else
         {
-            Console.WriteLine($"Key {key} was pressed.");
             return [0, 0];
         }
     }
