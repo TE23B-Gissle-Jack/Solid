@@ -22,7 +22,7 @@ while (true)
 
     player.move();
 
-    //eat if apple at head of snake
+    //eat apple if head of snake at apple
     if(player.head.x == apple.x && player.head.y == apple.y) apple.Eat(player);
 
     Thread.Sleep(200);
