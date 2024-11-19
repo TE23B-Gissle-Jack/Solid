@@ -13,15 +13,15 @@ for(int i = 0; i<2;i++)player.Grow();
 Console.CursorVisible = false;
 while (true)
 {
-    StartUp(map);
+    //StartUp(map);
     
     //draw Apple
     map[apple.x,apple.y] = ConsoleColor.DarkRed;
-    player.Draw(map);
 
-    DisplayMap(map);
+    //DisplayMap(map);
 
     player.move();
+    player.Draw(map);
 
     //eat apple if head of snake at apple
     if(player.head.x == apple.x && player.head.y == apple.y) apple.Eat(player);
@@ -41,7 +41,7 @@ void StartUp(ConsoleColor[,] array)
     }
 }
 
-void DisplayMap(ConsoleColor[,] map)
+/*void DisplayMap(ConsoleColor[,] map)
 {
     for (int y = 0; y < map.GetLength(1); y++)
     {
@@ -57,4 +57,4 @@ void DisplayMap(ConsoleColor[,] map)
         }
     }
     Console.BackgroundColor = ConsoleColor.Black; // make rest of console black
-}
+}*/

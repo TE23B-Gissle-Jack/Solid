@@ -21,5 +21,8 @@ public class Apple
             y = Random.Shared.Next(20);
             i=1;
         }
+        Console.BackgroundColor = ConsoleColor.DarkRed;
+        Console.SetCursorPosition(2*x, y);
+        Console.Write("  ");
     }
 }

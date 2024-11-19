@@ -13,7 +13,7 @@ public class Player(int x, int y)
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
     
-    int[] direction = [0, 1];
+    int[] direction = [1, 0];
     public void move()
     {
         int[] last = [head.x, head.y];
@@ -43,6 +43,10 @@ public class Player(int x, int y)
                 last = store;
             }
         }
+        //here just cuz
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.SetCursorPosition(2*last[0], last[1]);
+        Console.Write("  ");
     }
 
     //Not Really
@@ -50,13 +54,20 @@ public class Player(int x, int y)
     {
         //Assigne Colors at player positoion
         map[this.head.x, this.head.y] = ConsoleColor.Green;
+        Console.BackgroundColor = map[this.head.x, this.head.y];
+        Console.SetCursorPosition(2*this.head.x, this.head.y);
+        Console.Write("  ");
+
         if (this.segments.Count > 0)
-    {
-        foreach (Player.Segment segment in this.segments)
         {
-            map[segment.x, segment.y] = ConsoleColor.Green;
+            foreach (Player.Segment segment in this.segments)
+            {
+                map[segment.x, segment.y] = ConsoleColor.Green;
+                Console.BackgroundColor = map[segment.x, segment.y];
+                Console.SetCursorPosition(2*segment.x, segment.y);
+                Console.Write("  ");
+            }
         }
-    }
     }
 
     void Die()//Die
