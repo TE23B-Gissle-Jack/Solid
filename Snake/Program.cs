@@ -10,6 +10,7 @@ StartUp(map);
 StartUp(lastMap);
 for(int i = 0; i<2;i++)player.Grow();
 
+Console.CursorVisible = false;
 while (true)
 {
     StartUp(map);

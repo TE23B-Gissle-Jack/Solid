@@ -12,7 +12,7 @@ public class Player(int x, int y)
         if (segments.Count > 0) segments.Add(new Segment() { x = segments.Last().x, y = segments.Last().y });
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
-
+    
     int[] newt = [0, 1];
     public void move()
     {
