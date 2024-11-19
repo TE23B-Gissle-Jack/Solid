@@ -13,17 +13,21 @@ public class Player(int x, int y)
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
     
-    int[] newt = [0, 1];
+    int[] direction = [0, 1];
     public void move()
     {
         int[] last = [head.x, head.y];
-
+        
         if (Console.KeyAvailable)  // Check if a key is pressed
         {
-            newt = Inputs();
+            direction = Inputs();
         }
-        head.x += newt[0];
-        head.y += newt[1];
+        while(Console.KeyAvailable) // clear qued up inputs
+        {
+            Console.ReadKey(intercept: true);
+        }
+        head.x += direction[0];
+        head.y += direction[1];
 
         if (segments.Count > 0)
         {
