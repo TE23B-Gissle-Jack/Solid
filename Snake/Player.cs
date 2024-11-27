@@ -74,7 +74,7 @@ public class Player(int x, int y)
     {
         Environment.Exit(0);
     }
-
+    
     int[] Inputs()
     {   
         ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true); // Get key pressed and prevent it from being writen
