@@ -12,17 +12,32 @@ public class Player(int x, int y)
         if (segments.Count > 0) segments.Add(new Segment() { x = segments.Last().x, y = segments.Last().y });
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
-    
+
     int[] direction = [1, 0];
-    public void move()
+    int[] nextDirection;
+    public void move(int[,] map)
     {
         int[] last = [head.x, head.y];
-        
-        if (Console.KeyAvailable)  // Check if a key is pressed
+
+        if (nextDirection != null)
         {
-            direction = Inputs();
+            direction = nextDirection; // change direction based on last input
+            nextDirection = null;
+            if (Console.KeyAvailable)  // Check if a key is pressed
+            {
+                nextDirection = Inputs();//store next input
+            }
         }
-        while(Console.KeyAvailable) // clear qued up inputs
+        else if (Console.KeyAvailable)  // Check if a key is pressed
+        {
+            direction = Inputs(); // change direction based on current input
+
+            if (Console.KeyAvailable)  // Check if a key is pressed
+            {
+                nextDirection = Inputs(); //store next input
+            }
+        }
+        while (Console.KeyAvailable) // clear qued up inputs exept stored
         {
             Console.ReadKey(intercept: true);
         }
@@ -44,27 +59,28 @@ public class Player(int x, int y)
             }
         }
         //here just cuz
+        map[last[0], last[1]] = 0;
         Console.BackgroundColor = ConsoleColor.Black;
-        Console.SetCursorPosition(2*last[0], last[1]);
+        Console.SetCursorPosition(2 * last[0], last[1]);
         Console.Write("  ");
     }
 
-    //Not Really
-    public void Draw(ConsoleColor[,] map)
+    //Not Really... But really now
+    public void Draw(int[,] map)
     {
         //Assigne Colors at player positoion
-        map[this.head.x, this.head.y] = ConsoleColor.Green;
-        Console.BackgroundColor = map[this.head.x, this.head.y];
-        Console.SetCursorPosition(2*this.head.x, this.head.y);
+        map[this.head.x, this.head.y] = 1;
+        Console.BackgroundColor = ConsoleColor.Green;   //map[this.head.x, this.head.y];
+        Console.SetCursorPosition(2 * this.head.x, this.head.y);
         Console.Write("  ");
 
         if (this.segments.Count > 0)
         {
             foreach (Player.Segment segment in this.segments)
             {
-                map[segment.x, segment.y] = ConsoleColor.Green;
-                Console.BackgroundColor = map[segment.x, segment.y];
-                Console.SetCursorPosition(2*segment.x, segment.y);
+                map[segment.x, segment.y] = 1;
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(2 * segment.x, segment.y);
                 Console.Write("  ");
             }
         }
@@ -74,9 +90,9 @@ public class Player(int x, int y)
     {
         Environment.Exit(0);
     }
-    
+
     int[] Inputs()
-    {   
+    {
         ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true); // Get key pressed and prevent it from being writen
 
         ConsoleKey key = keyInfo.Key;// Get the key that was pressed
