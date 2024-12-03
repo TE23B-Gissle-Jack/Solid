@@ -7,50 +7,39 @@ public class Player(int x, int y)
     public List<Segment> segments = [];
     public Segment head = new Segment() { x = x, y = y };
 
+    public bool dead = false;
+
     public void Grow()
     {
         if (segments.Count > 0) segments.Add(new Segment() { x = segments.Last().x, y = segments.Last().y });
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
 
-    int[] direction = [1, 0];
-    int[] nextDirection;
-    public void move(int[,] map)
+    public int[] vel = [1, 0];
+    public int[] nextDirection;
+    public void move(int[,] map, int[] direction)
     {
         int[] last = [head.x, head.y];
 
-        if (nextDirection != null)
-        {
-            direction = nextDirection; // change direction based on last input
-            nextDirection = null;
-            if (Console.KeyAvailable)  // Check if a key is pressed
-            {
-                nextDirection = Inputs();//store next input
-            }
-        }
-        else if (Console.KeyAvailable)  // Check if a key is pressed
-        {
-            direction = Inputs(); // change direction based on current input
+        if(direction!=vel&&direction!=null)vel=direction;
 
-            if (Console.KeyAvailable)  // Check if a key is pressed
-            {
-                nextDirection = Inputs(); //store next input
-            }
-        }
-        while (Console.KeyAvailable) // clear qued up inputs exept stored
+        try
         {
-            Console.ReadKey(intercept: true);
+            head.x += vel[0];
+            head.y += vel[1];
         }
-        head.x += direction[0];
-        head.y += direction[1];
-
+        catch
+        {
+            dead = Die();
+        }
+        
         if (segments.Count > 0)
         {
             foreach (Segment part in segments)
             {
                 if ((part.x == head.x) && (part.y == head.y))
                 {
-                    Die();
+                    dead = Die();
                 }
                 int[] store = [part.x, part.y];
                 part.x = last[0];
@@ -65,14 +54,24 @@ public class Player(int x, int y)
         Console.Write("  ");
     }
 
+
+
     //Not Really... But really now
     public void Draw(int[,] map)
     {
         //Assigne Colors at player positoion
-        map[this.head.x, this.head.y] = 1;
-        Console.BackgroundColor = ConsoleColor.Green;   //map[this.head.x, this.head.y];
-        Console.SetCursorPosition(2 * this.head.x, this.head.y);
-        Console.Write("  ");
+        try
+        {
+            map[this.head.x, this.head.y] = 1;
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(2 * this.head.x, this.head.y);
+            Console.Write("  ");
+        }
+        catch
+        {
+            dead = Die();
+        }
+        
 
         if (this.segments.Count > 0)
         {
@@ -86,39 +85,13 @@ public class Player(int x, int y)
         }
     }
 
-    void Die()//Die
+    public bool Die()//Die
     {
-        Environment.Exit(0);
+        return true;
+        //Environment.Exit(0);
     }
 
-    int[] Inputs()
-    {
-        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true); // Get key pressed and prevent it from being writen
-
-        ConsoleKey key = keyInfo.Key;// Get the key that was pressed
-
-        // Handle specific key presses
-        if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
-        {
-            return [0, -1]; //direction player is going. So going -1 in Y here / going up
-        }
-        else if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
-        {
-            return [0, 1];
-        }
-        else if (key == ConsoleKey.LeftArrow || key == ConsoleKey.A)
-        {
-            return [-1, 0];
-        }
-        else if (key == ConsoleKey.RightArrow || key == ConsoleKey.D)
-        {
-            return [1, 0];
-        }
-        else
-        {
-            return [0, 0];
-        }
-    }
+   
 
     public class Segment()
     {

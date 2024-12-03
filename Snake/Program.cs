@@ -1,33 +1,47 @@
 ﻿using Snake;
 
-int[,] map = new int[20, 10];//not really used anymore
-int[,] lastMap = new int[20, 10];//not used anymore
-
-Player player = new Player(0, 0);
-int[] aapple = [1, 1];
-
-NewApple();
-StartUp(map);
-StartUp(lastMap);
-for (int i = 0; i < 2; i++) player.Grow();
-
 Console.CursorVisible = false;
-Console.SetWindowSize(40, 10);
+Console.SetWindowSize(120, 30);
+
+int[,] map = new int[60, 30];//not really used anymore
+int[,] lastMap = new int[60, 30];//not used anymore
+
+double[] input;
+Neural nn = new Neural([map.Length,map.Length/2,4],0.9);
+
+Player player;
+int[] aapple;
+
 while (true)
 {
-    //draw Apple
-    map[aapple[0], aapple[1]] = 2;
+    player = new Player(0, 0);
+    aapple = [1, 1];
+    
+    NewApple();
+    StartUp(map);
+    StartUp(lastMap);
+    for (int i = 0; i < 2; i++) player.Grow();
 
-    player.move(map);
-    player.Draw(map);
+    while (!player.dead)
+    {
+        //draw Apple
+        map[aapple[0], aapple[1]] = 2;
 
-    int[] lAstInput = make1D(lastMap);
-    int[] input = make1D(map);
+       
 
-    //eat apple if head of snake at apple
-    if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple();
+        player.move(map,PlayerControl());
+        player.Draw(map);
 
-    Thread.Sleep(200);
+        double[] lAstInput = make1D(lastMap);
+        input = make1D(map);
+        AiControl();
+        //eat apple if head of snake at apple
+        if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple();
+
+        Thread.Sleep(200);
+    }
+    Console.BackgroundColor = ConsoleColor.Black;
+    Console.Clear();
 }
 
 void StartUp(int[,] array)
@@ -53,22 +67,86 @@ void NewApple()
     int i = 0;
     while (player.segments.Any(segment => segment.x == aapple[0] && segment.y == aapple[1]) || i == 0)
     {
-        aapple[0] = Random.Shared.Next(20);
-        aapple[1] = Random.Shared.Next(10);
+        aapple[0] = Random.Shared.Next(60);
+        aapple[1] = Random.Shared.Next(30);
         i = 1;
     }
-    map[aapple[0],aapple[1]] = 2;
+    map[aapple[0], aapple[1]] = 2;
     Console.BackgroundColor = ConsoleColor.DarkRed;
     Console.SetCursorPosition(2 * aapple[0], aapple[1]);
     Console.Write("  ");
 }
 
-int[] make1D(int[,] map)
+double[] make1D(int[,] map)
 {
-    List<int> stuff =[];
-    foreach(int i in map)
+    List<double> stuff = [];
+    foreach (int i in map)
     {
         stuff.Add(i);
     }
     return stuff.ToArray();
 }
+
+ int[] Inputs()
+    {
+        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true); // Get key pressed and prevent it from being writen
+
+        ConsoleKey key = keyInfo.Key;// Get the key that was pressed
+
+        // Handle specific key presses
+        if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+        {
+            return [0, -1]; //direction player is going. So going -1 in Y here / going up
+        }
+        else if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
+        {
+            return [0, 1];
+        }
+        else if (key == ConsoleKey.LeftArrow || key == ConsoleKey.A)
+        {
+            return [-1, 0];
+        }
+        else if (key == ConsoleKey.RightArrow || key == ConsoleKey.D)
+        {
+            return [1, 0];
+        }
+        else
+        {
+            return [0, 0];
+        }
+    }
+
+    int[] PlayerControl()
+    {
+        int[] direction = player.vel;
+         if (player.nextDirection != null)
+        {
+            direction = player.nextDirection; // change direction based on last input
+            player.nextDirection = null;
+            if (Console.KeyAvailable)  // Check if a key is pressed
+            {
+                player.nextDirection = Inputs();//store next input
+            }
+        }
+        else if (Console.KeyAvailable)  // Check if a key is pressed
+        {
+            direction = Inputs(); // change direction based on current input
+
+            if (Console.KeyAvailable)  // Check if a key is pressed
+            {
+                player.nextDirection = Inputs(); //store next input
+            }
+        }
+        while (Console.KeyAvailable) // clear qued up inputs exept stored
+        {
+            Console.ReadKey(intercept: true);
+        }
+        return direction;
+    }
+
+    int[] AiControl()
+    {
+        double[] acction = nn.DoThing(input);
+        Console.WriteLine(acction[0] + " " + acction[1]);  
+        return [1]; 
+    }
