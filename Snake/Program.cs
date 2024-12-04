@@ -7,6 +7,7 @@ int[,] map = new int[60, 30];//not really used anymore
 int[,] lastMap = new int[60, 30];//not used anymore
 
 double[] input;
+int reward=0;
 Neural nn = new Neural([map.Length,map.Length/4,4],0.9);//Neural nn = new Neural([map.Length,map.Length/2,map.Length/4,4],0.9);
 
 Player player;
@@ -33,17 +34,22 @@ while (true)
         int a = (player.head.x-aapple[0])*(player.head.x-aapple[0]);//a^2
         int b =(player.head.y-aapple[1])*(player.head.y-aapple[1]);//b^2
         double dist =Math.Sqrt(a+b);//c
-        double rewardDist = 1/dist;
+        int rewardDist = Convert.ToInt32(Math.Round(1/dist*100));
+        reward+=rewardDist;
 
         player.move(map,AiControl());
         player.Draw(map);
 
         
         //eat apple if head of snake at apple
-        if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple();
+        if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple(true);
 
+        nn.Train(reward,input);
+        
         Thread.Sleep(200);
+        reward=0;
     }
+    reward = -100;
     Console.BackgroundColor = ConsoleColor.Black;
     Console.Clear();
 }
@@ -60,9 +66,10 @@ void StartUp(int[,] array)
     }
 }
 
-void EatApple()
+void EatApple(bool ai)
 {
     player.Grow();
+    if(ai)reward+=100;
     NewApple();
 }
 
@@ -150,20 +157,20 @@ double[] make1D(int[,] map)
 
     int[] AiControl()
     {
-        double[] acction = nn.DoThing(input);
+        int acction = nn.DoThing(input);
         //Console.WriteLine(acction[0] + " " + acction[1]);
 
-        double largest=0;
-        int thingie = 0;
+        // double largest=0;
+        // int thingie = 0;
         int[][] options = [[0,1],[1,0],[-1,0],[0,-1]];
-        for (int i = 0; i < acction.Length; i++)
-        {
-            if (acction[i]>largest)
-            {
-                largest = acction[i];
-                thingie = i;
-            }
-        }  
+        // for (int i = 0; i < acction.Length; i++)
+        // {
+        //     if (acction[i]>largest)
+        //     {
+        //         largest = acction[i];
+        //         thingie = i;
+        //     }
+        // }  
         //Console.WriteLine(largest+"   "+ thingie);
-        return options[thingie]; 
+        return options[acction]; 
     }
