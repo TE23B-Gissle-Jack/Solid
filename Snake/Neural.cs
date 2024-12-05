@@ -133,7 +133,7 @@ public class Neural
                     double output = 0;
                     for (int k = 0; k < neurons[i - 1]; k++)// for every neuron in last layer
                     {
-                        weights[i - 1][j, k] *= 1+reward/2000;
+                        weights[i - 1][j, k] *= 1+reward/(10000*(i/2));
                         //output += outputs2[i - 1][k] * weights[i - 1][j, k];//* somthing to make betwen 0-1
                     }
                     //outputs2[i][j] = 1 / (1 + Math.Exp(output));//neuron value this layer
