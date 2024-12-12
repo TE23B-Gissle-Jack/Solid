@@ -4,6 +4,7 @@ namespace Snake;
 
 public class Player(int x, int y)
 {
+    
     public List<Segment> segments = [];
     public Segment head = new Segment() { x = x, y = y };
 
@@ -15,13 +16,12 @@ public class Player(int x, int y)
         else segments.Add(new Segment() { x = head.x, y = head.y });
     }
 
-    public int[] vel = [1, 0];
-    public int[] nextDirection;
+    public int[] vel = [0,0];
+    public int[] nextDirection = new int[2];
     public void move(int[,] map, int[] direction)
     {
         int[] last = [head.x, head.y];
-
-        if(direction!=vel&&direction!=null)vel=direction;
+        if(direction!=null) vel=direction;
 
         try
         {

@@ -1,68 +1,71 @@
 ﻿using Snake;
-int e = 1;
+int e = 1;//ai randomnes
+
+int mapSizeX = 60;
+int mapSizeY = 30;
 
 Console.CursorVisible = false;
-Console.SetWindowSize(120, 30);
+Console.SetWindowSize(mapSizeX*2, mapSizeY);
 
-int[,] map = new int[60, 30];//not really used anymore
-int[,] lastMap = new int[60, 30];//not used anymore
+int[,] map = new int[mapSizeX, mapSizeY];//not really used anymore
+int[,] lastMap = new int[mapSizeX, mapSizeY];//not used anymore
 
-double[] input = [];
+double[] AiInput = new double[map.Length*2];
 int reward=0;
-Neural nn = new Neural([map.Length*2,4],0.9);//Neural nn = new Neural([map.Length,map.Length/2,map.Length/4,4],0.9);
+Neural nn = new Neural([map.Length*2,20,4],0.9);//Neural nn = new Neural([map.Length,map.Length/2,map.Length/4,4],0.9);
 
 Player player;
 int[] aapple;
 
+int acction = 0;
+
 while (true)
 {
     player = new Player(30, 15);
-    // aapple = [1, 1];
+    aapple = [1, 1];
     
-    // NewApple();
+    NewApple();
     StartUp(map);
     StartUp(lastMap);
-    for (int i = 0; i < 2; i++) player.Grow();
+    for (int i = 0; i < 0; i++) player.Grow();
 
-    double lastDist=9999999999;
+    double lastDist = double.MaxValue;
     while (!player.dead)
     {
         //double[] lAstInput = make1D(lastMap);
-        input = make1D(map,lastMap);
+        AiInput = make1D(map,lastMap);
 
-        // int a = (player.head.x-aapple[0])*(player.head.x-aapple[0]);//a^2
-        // int b =(player.head.y-aapple[1])*(player.head.y-aapple[1]);//b^2
-        // double dist =Math.Sqrt(a+b);//c
-        //  int rewardDist;
-        //  if (dist!=0)
-        //  {
-        //     if(dist>lastDist) rewardDist=-50;
-        //     else if(dist<lastDist) rewardDist=10;
-        //     else rewardDist =1;
-        //  }
-        //  else rewardDist = 100;
-        //int rewardDist = Convert.ToInt32(Math.Round(1/dist*100));
-        //int rewardDist = Convert.ToInt32(Math.Round(1/dist*100));
-        // reward+=rewardDist;
-        // lastDist=dist;
+        int a = (player.head.x-aapple[0])*(player.head.x-aapple[0]);//a^2
+        int b =(player.head.y-aapple[1])*(player.head.y-aapple[1]);//b^2
+        double dist =Math.Sqrt(a+b);//c
+        if (dist!=0)
+        {
+           if(dist>lastDist) reward=-1;
+           else if(dist<lastDist) reward=1;
+           else reward =0;
+        }
+        lastDist=dist;
+
+        int[][] options = [[0,1],[1,0],[-1,0],[0,-1]];
+        acction = AiControl();
 
         lastMap = map;
-        player.move(map,AiControl());
+        player.move(map,PlayerControl());//options[acction]//PlayerControl()
         player.Draw(map);
 
         //draw Apple
-        // map[aapple[0], aapple[1]] = 2;
+        map[aapple[0], aapple[1]] = 1;
         
         //eat apple if head of snake at apple
-        // if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple(true);
+        if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple(false);
 
-        nn.Train(reward,input);
+        nn.Train(reward,AiInput,acction);
 
-        //Thread.Sleep(2);
+        Thread.Sleep(100);
         reward=0;
     }
-    reward = -105;
-    nn.Train(reward,input);
+    reward = -7;
+    nn.Train(reward,AiInput,acction);
     Console.BackgroundColor = ConsoleColor.Black;
     Console.Clear();
 }
@@ -82,7 +85,7 @@ void StartUp(int[,] array)
 void EatApple(bool ai)
 {
     player.Grow();
-    if(ai)reward+=90;
+    if(ai)reward=10;
     NewApple();
 }
 
@@ -91,15 +94,15 @@ void NewApple()
     int i = 0;
     while (player.segments.Any(segment => segment.x == aapple[0] && segment.y == aapple[1]) || i == 0)
     {
-        aapple[0] = Random.Shared.Next(60);
-        aapple[1] = Random.Shared.Next(30);
+        aapple[0] = Random.Shared.Next(mapSizeX);
+        aapple[1] = Random.Shared.Next(mapSizeY);
 
-        aapple[0] = 4;
-        aapple[1] = 2;
+        //  aapple[0] = 4;
+        //  aapple[1] = 2;
 
         i = 1;
     }
-    map[aapple[0], aapple[1]] = 2;
+    map[aapple[0], aapple[1]] = 1;
     Console.BackgroundColor = ConsoleColor.DarkRed;
     Console.SetCursorPosition(2 * aapple[0], aapple[1]);
     Console.Write("  ");
@@ -144,7 +147,7 @@ double[] make1D(int[,] map,int[,]lastMap)
         }
         else
         {
-            return [0, 0];
+            return [0,0];
         }
     }
 
@@ -178,31 +181,16 @@ double[] make1D(int[,] map,int[,]lastMap)
 
 
     
-    int[] AiControl()
+    int AiControl()
     {
-        int acction = nn.DoThing(input);
-        //Console.WriteLine(acction[0] + " " + acction[1]);
+        int acction = nn.DoThing(AiInput);
 
-        // double largest=0;
-        // int thingie = 0;
-        int[][] options = [[0,1],[1,0],[-1,0],[0,-1]];
-        // for (int i = 0; i < acction.Length; i++)
-        // {
-        //     if (acction[i]>largest)
-        //     {
-        //         largest = acction[i];
-        //         thingie = i;
-        //     }
-        // }  
-        //Console.WriteLine(largest+"   "+ thingie);
-        if (Random.Shared.Next(10)>0)
+        if (Random.Shared.Next(e)==0)
         {
-            return options[acction]; 
-        }
-        if (Random.Shared.Next(100)==0)
-        {
-            e ++;
+            acction = Random.Shared.Next(4);
+
+            if (Random.Shared.Next(100)==0)e ++;
         }
         
-        return options[Random.Shared.Next(4)];
+        return acction;
     }
