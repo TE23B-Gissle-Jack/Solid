@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj": {}
+    "C:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj": {}
   },
   "projects": {
-    "c:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj": {
+    "C:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj",
+        "projectUniqueName": "C:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj",
         "projectName": "Snake",
-        "projectPath": "c:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj",
+        "projectPath": "C:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\Snake.csproj",
         "packagesPath": "C:\\Users\\jack.gissle\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\obj\\",
+        "outputPath": "C:\\Users\\jack.gissle\\Desktop\\Prog !\\Solid\\Snake\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jack.gissle\\AppData\\Roaming\\NuGet\\NuGet.Config"

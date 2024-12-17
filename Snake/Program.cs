@@ -30,7 +30,7 @@ while (true)
     for (int i = 0; i < 0; i++) player.Grow();
 
     double lastDist = double.MaxValue;
-    while (!player.dead)
+    while (!player.dead && player.segments.Count < map.Length-1)
     {
         //double[] lAstInput = make1D(lastMap);
         AiInput = make1D(map,lastMap);
