@@ -1,8 +1,8 @@
 ﻿using Snake;
 int e = 1;//ai randomnes
 
-int mapSizeX = 60;
-int mapSizeY = 30;
+int mapSizeX = 10;
+int mapSizeY = 10;
 
 Console.CursorVisible = false;
 Console.SetWindowSize(mapSizeX*2, mapSizeY);
@@ -21,7 +21,7 @@ int acction = 0;
 
 while (true)
 {
-    player = new Player(30, 15);
+    player = new Player(Random.Shared.Next(mapSizeX), Random.Shared.Next(mapSizeY));
     aapple = [1, 1];
     
     NewApple();
@@ -45,12 +45,12 @@ while (true)
            else reward =0;
         }
         lastDist=dist;
-
-        int[][] options = [[0,1],[1,0],[-1,0],[0,-1]];
+                            //learns to take first option
+        int[][] options = [[1,0],[0,1],[-1,0],[0,-1]];
         acction = AiControl();
 
         lastMap = map;
-        player.move(map,PlayerControl());//options[acction]//PlayerControl()
+        player.move(map,options[acction]);//options[acction]//PlayerControl()
         player.Draw(map);
 
         //draw Apple

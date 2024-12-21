@@ -80,13 +80,13 @@ public class Neural
     {  
         List<double> outputs = new List<double>();
         List<double[,]> weightsOutput = new List<double[,]>();
-        List<double> remeber = new List<double>();
+        List<double[]> remeber = new List<double[]>();
         //double[] acction = new double[neurons.Length - 1];
         for (int i = 1; i < neurons.Length; i++)// for every layer
         {
             //double[] outputs = new double[neurons[i]];//list of outputs this layer //needs to be inputs next layer     
             if (i == 1) outputs = new List<double>(input);
-
+            List<double> ahahah = new List<double>();
             double[,] tttt = new double[neurons[i],neurons[i-1]];
             for (int j = 0; j < neurons[i]; j++)//for every neuron in layer
             {
@@ -98,11 +98,13 @@ public class Neural
                     output += weigh;//* somthing to make betwen 0-1
                     
                 }
-                remeber.Add(output);
+                ahahah.Add(output);//remeber.Add(output);// should be value of action taken neuron, and all other neurons, maybe
                 outputs[j] = 1 / (1 + Math.Exp(-output));//sigmoid or something to make betwen 0-1
             }
+            remeber.Add(ahahah.ToArray());
             weightsOutput.Add(tttt);
         }
+        remeber.Reverse();
         // acction = outputs[..neurons[neurons.Length - 1]].ToArray();
 
         // check wich weigts conect to thingie
@@ -116,14 +118,14 @@ public class Neural
             {
                     for (int k = 0; k < neurons[i - 1]; k++)// for every neuron in last layer
                     {      
-                        // hwo big part weightsOutput is of remeber and
-                        double procent =weightsOutput[i-1][taken,k]/remeber[i];
+                        // hwo big part weightsOutput is of remeber and // wtf is remember
+                        double procent =weightsOutput[i-1][taken,k]/remeber[i-1][taken];
                         //change weight value
                         if(reward<0)
                         {
 
                         }
-                        double change = reward*procent/1000;;
+                        double change = reward*procent;;
                         weights[i - 1][taken, k] += change;
                         //delta = outputs2[i - 1][k] * weights[i - 1][thingie, k];//* somthing to make betwen 0-1
                     }
@@ -136,9 +138,9 @@ public class Neural
                     //double output = 0;
                     for (int k = 0; k < neurons[i - 1]; k++)// for every neuron in last layer
                     {
-                        double procent =weightsOutput[i-1][j,k]/remeber[i];
+                        double procent =weightsOutput[i-1][j,k]/remeber[i][j];
                         //change weight value
-                        double change = (reward*procent)/1000*Math.Pow(2,Math.Abs(neurons.Length-i));
+                        double change = (reward*procent)*Math.Pow(2,Math.Abs(neurons.Length-i));
                         weights[i - 1][j, k] += change;
                         //output += outputs2[i - 1][k] * weights[i - 1][j, k];//* somthing to make betwen 0-1
                     }
