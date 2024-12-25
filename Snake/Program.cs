@@ -1,5 +1,6 @@
 ﻿using Snake;
 int e = 1;//ai randomnes
+int ak47 = 0;
 
 int mapSizeX = 10;
 int mapSizeY = 10;
@@ -35,6 +36,17 @@ while (true)
         //double[] lAstInput = make1D(lastMap);
         AiInput = make1D(map,lastMap);
 
+                            //learns to take first option
+        int[][] options = [[1,0],[0,1],[-1,0],[0,-1]];
+        acction = AiControl();
+        Console.Beep();
+        lastMap = map;
+        player.move(map,options[acction]);//options[acction]//PlayerControl()
+        player.Draw(map);
+
+        //draw Apple
+        //map[aapple[0], aapple[1]] = 1;
+
         int a = (player.head.x-aapple[0])*(player.head.x-aapple[0]);//a^2
         int b =(player.head.y-aapple[1])*(player.head.y-aapple[1]);//b^2
         double dist =Math.Sqrt(a+b);//c
@@ -45,26 +57,17 @@ while (true)
            else reward =0;
         }
         lastDist=dist;
-                            //learns to take first option
-        int[][] options = [[1,0],[0,1],[-1,0],[0,-1]];
-        acction = AiControl();
-
-        lastMap = map;
-        player.move(map,options[acction]);//options[acction]//PlayerControl()
-        player.Draw(map);
-
-        //draw Apple
-        map[aapple[0], aapple[1]] = 1;
         
         //eat apple if head of snake at apple
         if (player.head.x == aapple[0] && player.head.y == aapple[1]) EatApple(false);
 
         nn.Train(reward,AiInput,acction);
 
-        Thread.Sleep(100);
+        //Thread.Sleep(300);
         reward=0;
+        //Console.WriteLine($"Action: {acction}, Outputs: {ak47}");
     }
-    reward = -7;
+    reward = -10;
     nn.Train(reward,AiInput,acction);
     Console.BackgroundColor = ConsoleColor.Black;
     Console.Clear();
@@ -184,7 +187,7 @@ double[] make1D(int[,] map,int[,]lastMap)
     int AiControl()
     {
         int acction = nn.DoThing(AiInput);
-
+        ak47 = acction;
         if (Random.Shared.Next(e)==0)
         {
             acction = Random.Shared.Next(4);
